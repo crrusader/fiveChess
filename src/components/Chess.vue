@@ -21,8 +21,8 @@ const downChess = (e) => {
   // 判断点击下棋还是输入下棋
   let x = e.offsetX;
   let y = e.offsetY;
-  let i = Math.floor(x / 30);
-  let j = Math.floor(y / 30);
+  let i = Math.floor(x / 20);
+  let j = Math.floor(y / 20);
   if (chessBoard.value[i][j] == 0) {
     oneStep(i, j, whoReturn.value);
     chessBoard.value[i][j] = whoReturn.value; // 已占位置
@@ -48,7 +48,6 @@ const downChess = (e) => {
           window.alert("白子赢了");
           over.value = true;
         }
-        console.log(whoReturn.value, blackWin.value, whiteWin.value);
       }
     }
     if (!over.value) {
@@ -59,30 +58,54 @@ const downChess = (e) => {
 
 // 画棋子
 const oneStep = function (i, j, me) {
-  let chessWidth = 7;
+  let chessWidth = 6;
   context.value.beginPath();
-  context.value.arc(15 + i * 30, 15 + j * 30, chessWidth, 0, 2 * Math.PI); // 画圆
+  // context.value.rect(
+  //   10 + i * 20 - chessWidth,
+  //   10 + j * 20 - chessWidth,
+  //   2 * chessWidth,
+  //   2 * chessWidth
+  // ); // 画方
+  context.value.arc(10 + i * 20, 10 + j * 20, chessWidth, 0, 2 * Math.PI); // 画圆
   context.value.closePath();
   //渐变
   var gradient = context.value.createRadialGradient(
-    15 + i * 30 + 2,
-    15 + j * 30 - 2,
+    10 + i * 20 + 2,
+    10 + j * 20 - 2,
     chessWidth,
-    15 + i * 30 + 2,
-    15 + j * 30 - 2,
+    10 + i * 20 + 2,
+    10 + j * 20 - 2,
     0
   );
   // 判断黑白棋
+  // if (me === 1) {
+  //   gradient.addColorStop(0, "#0a0a0a");
+  //   gradient.addColorStop(1, "#636766");
+  // } else {
+  //   gradient.addColorStop(0, "#d1d1d1");
+  //   gradient.addColorStop(1, "#f9f9f9");
+  // }
+  // if (me === 1) {
+  //   gradient.addColorStop(0, "#13a10e");
+  //   gradient.addColorStop(1, "#0c0c0c");
+  // } else {
+  //   gradient.addColorStop(0, "#767676");
+  //   gradient.addColorStop(1, "#61d6d6");
+  // }
   if (me === 1) {
     gradient.addColorStop(0, "#0a0a0a");
     gradient.addColorStop(1, "#636766");
   } else {
-    gradient.addColorStop(0, "#d1d1d1");
-    gradient.addColorStop(1, "#f9f9f9");
+    gradient.addColorStop(0, "#767676");
+    gradient.addColorStop(1, "#61d6d6");
   }
   context.value.fillStyle = gradient;
   context.value.fill();
 };
+
+// TODO:
+// 修改棋子颜色 换肤
+const ChangeColor = () => {};
 
 // 初始化赢法数组
 const init = () => {
@@ -161,25 +184,29 @@ onMounted(() => {
   let chess = document.getElementById("chess");
   context.value = chess.getContext("2d");
   context.value.strokeStyle = "#767676"; //边框颜色
+  context.value.lineWidth = 1; //边框颜色
   for (let i = 0; i < 15; i++) {
-    context.value.moveTo(15 + i * 30, 15);
-    context.value.lineTo(15 + i * 30, 435);
+    context.value.moveTo(10 + i * 20, 10);
+    context.value.lineTo(10 + i * 20, 290);
     context.value.stroke();
-    context.value.moveTo(15, 15 + i * 30);
-    context.value.lineTo(435, 15 + i * 30);
+    context.value.moveTo(10, 10 + i * 20);
+    context.value.lineTo(290, 10 + i * 20);
     context.value.stroke();
   }
 });
 </script>
 
 <template>
-  <canvas id="chess" width="450" height="450" @click="downChess"></canvas>
+  <canvas id="chess" width="300" height="300" @click="downChess"></canvas>
 </template>
 
 <style scoped>
 canvas {
-  display: block;
-  margin: 50px auto;
+  /* display: inline; */
+  /* margin: 50px auto; */
   cursor: pointer;
+  float: left;
+  position: relative;
+  z-index: 1;
 }
 </style>

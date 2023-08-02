@@ -23,7 +23,7 @@ const count = ref(6);
     <p class="lh0 txindent">{{ `  > Network: use \`--host\` to expose` }}</p>
     <p class="main txindent mt10">{{ `  ready in 8359ms.` }}</p>
 
-    <p class="blink mt2lines animate__fadeIn"></p>
+    <!-- <p class="blink mt2lines animate__fadeIn"></p> -->
   </div>
 </template>
 
