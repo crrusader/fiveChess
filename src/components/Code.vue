@@ -4,10 +4,10 @@
  * This is how to press some code to opt GAMES:
  *  S: Start Game!
  *  CODE: Enter like A3 to play chess!
+ *  E: Modify Chess Color!
  *  TODO: ↓
  *  R: Apply for a new game!
  *  C: Apply to switch to another color of the chess piece!
- *  E: Modify Chess Color!
  * Note: The following code is irrelevant, please ignore it!
  */</code></pre>
   <pre

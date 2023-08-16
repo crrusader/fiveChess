@@ -13,7 +13,10 @@ export const createSocket = url => {
     tempUrl = url
     if (!Socket) {
         console.log('建立websocket连接')
-        Socket = new io(url);
+        Socket = new io(url, {
+            // autoConnect: false
+        });
+        console.log(Socket);
         Socket.on("connect", onopenWS);
         Socket.on("message", onmessageWS);
         Socket.on("connect_error", onerrorWS);
@@ -36,8 +39,10 @@ const onerrorWS = () => {
     clearInterval(setIntervalWesocketPush)
     console.log('连接失败重连中')
     if (Socket.disconnected) {
-        Socket = null
-        createSocket(tempUrl)
+        // 避免无限重连卡死
+        setTimeout(() => {
+            Socket.connect();
+        }, 300)
     }
 }
 
@@ -81,19 +86,23 @@ export const sendWSPush = message => {
     console.log(Socket, Socket.connected);
     if (Socket !== null && Socket.connected) {
         Socket.emit(message.key, message.value)
+    } else if (Socket) {
+        Socket.connect();
     } else {
         Socket = null
-        Socket.close()
-        createSocket(tempUrl)
+        // createSocket(tempUrl)
     }
 }
 
 /**断开重连 */
 const oncloseWS = (reason) => {
     clearInterval(setIntervalWesocketPush)
-    console.log(reason, 'websocket已断开....正在尝试重连')
-    if (reason === "io server disconnect") {
-        Socket.connect();
+    if (["io server disconnect"].includes(reason)) {
+        console.log(reason, 'websocket已断开....正在尝试重连')
+        // 避免无限重连卡死
+        setTimeout(() => {
+            Socket.connect();
+        }, 300)
     }
 }
 /**发送心跳

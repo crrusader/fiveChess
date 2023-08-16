@@ -16,6 +16,8 @@ let count = ref(0); // 所有赢法的数量
 let whoReturn = ref(1); // 1.黑子走 2.白子走
 let over = ref(false); // 游戏是否结束
 
+let defineClass = ref(""); // 棋盘样式class
+
 // 下棋
 const downChess = (e) => {
   if (over.value) {
@@ -109,7 +111,15 @@ const oneStep = function (i, j, me) {
 
 // TODO:
 // 修改棋子颜色 换肤
-const ChangeColor = () => {};
+let num = 0;
+const ChangeColor = () => {
+  let randomClass = ["primary", "notify", "main", "normal", "ignore", ""];
+  defineClass.value = randomClass[num];
+  num++;
+  if (num >= randomClass.length) {
+    num = 0;
+  }
+};
 
 // 初始化赢法数组
 const init = () => {
@@ -221,7 +231,7 @@ defineExpose({
 <template>
   <marquee class="tips" ref="tipRef"></marquee>
   <canvas id="chess" width="300" height="300" @click="downChess"></canvas>
-  <div style="position: relative; padding-top: 10px">
+  <div style="position: relative; padding-top: 10px" :class="defineClass">
     <pre ref="chessRef" class="chess"></pre>
     <pre class="line">
       <div v-for="(item) in 15">{{item}}</div>
@@ -285,5 +295,36 @@ canvas {
 .line > div:nth-child(n + 10) {
   writing-mode: tb;
   line-height: 10.3px;
+}
+
+.primary .chess {
+  color: var(--primary-color);
+}
+.primary .line {
+  color: var(--primary-color);
+}
+.notify .chess {
+  color: var(--notify-color);
+}
+.notify .line {
+  color: var(--notify-color);
+}
+.main .chess {
+  color: var(--main-color);
+}
+.main .line {
+  color: var(--main-color);
+}
+.normal .chess {
+  color: var(--normal-color);
+}
+.normal .line {
+  color: var(--normal-color);
+}
+.ignore .chess {
+  color: var(--ignore-color);
+}
+.ignore .line {
+  color: var(--ignore-color);
 }
 </style>

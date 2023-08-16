@@ -26,19 +26,19 @@
   --animate-repeat: 1;
 }
 .primary {
-  color:var(--primary-color)
+  color: var(--primary-color);
 }
 .notify {
-  color:var(--notify-color)
+  color: var(--notify-color);
 }
 .main {
-  color:var(--main-color)
+  color: var(--main-color);
 }
 .normal {
-  color:var(--normal-color)
+  color: var(--normal-color);
 }
 .ignore {
-  color:var(--ignore-color)
+  color: var(--ignore-color);
 }
 
 a {
