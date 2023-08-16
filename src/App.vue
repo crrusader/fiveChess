@@ -6,12 +6,18 @@ import InputTag from "./components/Input.vue";
 
 import { ref } from "vue";
 const chessRef = ref(null);
+function ChangeColor() {
+  chessRef.value.ChangeColor();
+}
+function sendInstruct(e) {
+  chessRef.value.sendInstruct(e);
+}
 </script>
 
 <template>
   <HelloWorld msg="....." />
   <!-- 指令输入处 -->
-  <InputTag @ChangeColor="chessRef.ChangeColor()" />
+  <InputTag @ChangeColor="ChangeColor" @sendInstruct="sendInstruct" />
   <!-- 棋盘 -->
   <Chess ref="chessRef" />
   <!-- 代码code -->

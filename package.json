@@ -5,10 +5,12 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "serve": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
   "dependencies": {
+    "socket.io-client": "^4.7.2",
     "vue": "^3.3.4"
   },
   "devDependencies": {

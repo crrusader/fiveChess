@@ -2,8 +2,11 @@
   <pre>
     <code class="language-js">/*
  * This is how to press some code to opt GAMES:
- *  C: Apply to switch to another color of the chess piece!
+ *  S: Start Game!
+ *  CODE: Enter like A3 to play chess!
+ *  TODO: ↓
  *  R: Apply for a new game!
+ *  C: Apply to switch to another color of the chess piece!
  *  E: Modify Chess Color!
  * Note: The following code is irrelevant, please ignore it!
  */</code></pre>
@@ -59,7 +62,7 @@ class LiBai extends Artist {
 
 export default Paul;</code></pre>
 </template>
-<style scoped>
+<style>
 pre {
   background-color: var(--background-color);
   white-space: pre-wrap;

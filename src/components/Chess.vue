@@ -1,5 +1,9 @@
 <script setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, defineExpose } from "vue";
+import { createSocket, sendWSPush } from "../utils/socket.js";
+
+const chessRef = ref(null);
+const tipRef = ref(null);
 
 let chessBoard = ref([]); // 棋盘
 let context = ref(null); // canvas
@@ -174,6 +178,11 @@ const initBoard = (memoryBoard = []) => {
   }
 };
 
+// 回显指令
+const sendInstruct = (msg = "") => {
+  tipRef.value.innerHTML = msg;
+};
+
 // 初始化基础数据
 init();
 // 初始化棋盘
@@ -193,11 +202,31 @@ onMounted(() => {
     context.value.lineTo(290, 10 + i * 20);
     context.value.stroke();
   }
+  createSocket("ws://10.10.56.85:4000");
+  window.addEventListener("onmessageWS", function (e) {
+    tipRef.value.innerHTML = e.detail;
+  });
+
+  window.addEventListener("ongameMapWs", function (e) {
+    chessRef.value.innerHTML = e.detail;
+  });
+});
+
+defineExpose({
+  ChangeColor,
+  sendInstruct,
 });
 </script>
 
 <template>
+  <marquee class="tips" ref="tipRef"></marquee>
   <canvas id="chess" width="300" height="300" @click="downChess"></canvas>
+  <div style="position: relative; padding-top: 10px">
+    <pre ref="chessRef" class="chess"></pre>
+    <pre class="line">
+      <div v-for="(item) in 15">{{item}}</div>
+    </pre>
+  </div>
 </template>
 
 <style scoped>
@@ -208,5 +237,53 @@ canvas {
   float: left;
   position: relative;
   z-index: 1;
+  visibility: hidden;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+.tips {
+  color: var(--notify-color);
+  font-family: serif;
+  width: 241px;
+}
+.chess {
+  position: relative;
+  z-index: 1;
+  float: left;
+  line-height: 10px;
+  letter-spacing: 2px;
+}
+
+/* .chess:after {
+  content: "123456789101112131415";
+  position: absolute;
+  top: 0;
+  left: 10px;
+} */
+.chess:before {
+  content: "ABCDEFGHIJKLMNO";
+  position: absolute;
+  top: 10px;
+  left: 0px;
+  width: 0;
+}
+
+.line {
+  position: absolute;
+  left: 10px;
+  top: 0;
+  padding: 0;
+  display: flex;
+  z-index: 1;
+  background: transparent;
+  letter-spacing: 1.8px;
+}
+.line > div {
+  line-height: 10.3px;
+}
+.line > div:nth-child(n + 10) {
+  writing-mode: tb;
+  line-height: 10.3px;
 }
 </style>

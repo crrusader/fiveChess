@@ -1,6 +1,8 @@
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, defineEmits } from "vue";
+import { sendWSPush } from "../utils/socket.js";
 
+const emit = defineEmits(["ChangeColor", "sendInstruct"]);
 const textWord = ref("");
 const inputRef = ref(null);
 
@@ -21,13 +23,31 @@ let textWidth = function (text) {
 };
 
 watch(textWord, (val) => {
-  const width = Math.floor(textWidth(val));
-  inputRef.value.style.width = width > 0 ? `${width}px` : "60px";
+  // const width = Math.floor(textWidth(val));
+  // inputRef.value.style.width = width > 0 ? `${width}px` : "60px";
 });
 
-function enterKey(val) {
-  if (["e", "E"].includes(textWord)) {
+// 匹配棋盘正则
+const matchCode = /^[a-oA-O](([1-9])|(1[0-5]))$/;
+
+// 发送socket信息
+function send() {
+  if (!textWord.value) return;
+  textWord.value = textWord.value.trim();
+  const instruct = textWord.value.toUpperCase();
+  if (instruct === "S") {
+    sendWSPush({ key: "startGame", value: "1" });
+    textWord.value = "";
+  } else if (instruct === "E") {
     emit("ChangeColor");
+    textWord.value = "";
+  } else if (matchCode.test(instruct)) {
+    const xLine = instruct.match(/[\d]{1,2}/)[0];
+    const yLine = instruct.match(/\S/)[0];
+    sendWSPush({ key: "playChess", value: [yLine, xLine] });
+    textWord.value = "";
+  } else {
+    emit("sendInstruct", "Unrecognized instructions");
   }
 }
 </script>
@@ -35,17 +55,25 @@ function enterKey(val) {
 <template>
   <div class="blink">
     <input
-      @keypress.enter="enterKey"
+      @keypress.enter="send"
       autofocus
       ref="inputRef"
       type="text"
       v-model="textWord"
       placeholder="输入指令"
     />
+    <button @click="send" class="btn">Send</button>
   </div>
 </template>
 
 <style scoped>
+.btn {
+  border: none;
+  outline: none;
+}
+.btn:active {
+  color: var(--notify-color);
+}
 .blink {
   padding-left: 16px;
   /* width: 8px;
